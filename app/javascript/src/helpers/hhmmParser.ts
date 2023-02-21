@@ -28,3 +28,19 @@ export const minToHHMM = (duration: number) => {
 
   return `${hours}:${minutes}`;
 };
+
+export const minToHHMMSS = (duration: number) => {
+  if (Number.isNaN(duration) || duration <= 0) {
+    return "00:00:00";
+  }
+  const roundDur = Number(duration.toFixed());
+  let hours = (roundDur / (60 * 60)).toString().split(".")[0];
+  let minutes = ((roundDur / 60) % 60).toString().split(".")[0];
+  let seconds = (roundDur % 60).toString();
+  if (hours.length === 1) hours = `0${hours}`;
+
+  if (minutes.length === 1) minutes = `0${minutes}`;
+  if (seconds.length === 1) seconds = `0${seconds}`;
+
+  return `${hours}:${minutes}:${seconds}`;
+};

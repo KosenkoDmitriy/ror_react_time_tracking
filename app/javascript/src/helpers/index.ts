@@ -4,7 +4,7 @@ import { currencyFormat } from "./currency";
 import { currencySymbol } from "./currencySymbol";
 import { getMonthFromString } from "./dateParser";
 import { useDebounce } from "./debounce";
-import { minFromHHMM, minToHHMM } from "./hhmmParser";
+import { minFromHHMM, minToHHMM, minToHHMMSS } from "./hhmmParser";
 import { lineTotalCalc } from "./lineTotalCalc";
 import { getNumberWithOrdinal } from "./ordinal";
 import { useOutsideClick } from "./outsideClick";
@@ -24,6 +24,7 @@ export {
   getNumberWithOrdinal,
   minFromHHMM,
   minToHHMM,
+  minToHHMMSS,
   lineTotalCalc,
   separateAddressFields,
   useDebounce,

@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import {
   minFromHHMM,
   minToHHMM,
+  minToHHMMSS,
   useOutsideClick,
   validateTimesheetEntry,
 } from "helpers";
@@ -16,6 +17,7 @@ import { TimeInput } from "StyledComponents";
 import timesheetEntryApi from "apis/timesheet-entry";
 import CustomDatePicker from "common/CustomDatePicker";
 import Toastr from "common/Toastr";
+// import Timer from "Timer";
 
 const AddEntry: React.FC<Iprops> = ({
   selectedEmployeeId,
@@ -84,7 +86,7 @@ const AddEntry: React.FC<Iprops> = ({
     }
   }, [project]);
 
-  const handleDurationChange = val => {
+  const handleDurationChange = (val) => {
     setDuration(val);
   };
 
@@ -111,6 +113,8 @@ const AddEntry: React.FC<Iprops> = ({
         setNewEntryView(false);
         setUpdateView(true);
         handleAddEntryDateChange(dayjs(selectedDate));
+
+        handleReset()
       }
     }
   };
@@ -157,9 +161,43 @@ const AddEntry: React.FC<Iprops> = ({
     return false;
   };
 
+
   useEffect(() => {
     handleFillData();
   }, []);
+
+  const [durationInt, setDurationInt] = useState<number>(0);
+  const [isStopped, setIsStopped] = useState<boolean>(true)
+
+  useEffect(() => {
+    let interval = null;
+    if (!isStopped) {
+      interval = setInterval(() => {
+        setDurationInt(durationInt + 1)
+        setDuration(minToHHMMSS(durationInt))
+      }, 1000);
+  } else if (isStopped && durationInt > 0) {
+    return handleStop(interval)
+  }
+  return () => clearInterval(interval);
+
+  }, [isStopped, durationInt]);
+
+  const handleStart = () => {
+    setIsStopped(!isStopped)
+  }
+
+  const handleStop = (interval) => {
+    setIsStopped(true)
+    // handleSave()
+    // handleReset()
+    // clearInterval(interval)
+  }
+
+  const handleReset = () => {
+    setDurationInt(0)
+    setDuration(minToHHMMSS(durationInt))
+  }
 
   return (
     <div
@@ -278,6 +316,14 @@ const AddEntry: React.FC<Iprops> = ({
         </div>
       </div>
       <div className="max-w-min">
+      <button
+            className={`mb-1 h-8 w-38 rounded border py-1 px-6 text-xs font-bold tracking-widest text-white ${
+              "bg-miru-han-purple-1000 hover:border-transparent"
+            }`}
+            onClick={handleStart}
+          >
+           {isStopped? 'START' : 'STOP'}
+          </button>
         {editEntryId === 0 ? (
           <button
             disabled={handleDisableBtn()}
